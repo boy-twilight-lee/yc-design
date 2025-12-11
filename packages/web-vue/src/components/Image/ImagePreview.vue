@@ -20,17 +20,15 @@
         >
           <!-- img -->
           <div
-            :style="{
-              transform: `scale(${scale}, ${scale})`,
-            }"
             class="yc-image-preview-img-container"
-            @click.self="handleClose('mask', $event, false)"
+            @click.self="!isDragging && handleClose('mask', $event, false)"
           >
             <img
               :src="src"
               :style="{
-                transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+                transform: `translate(calc(${valueToPx(x)} - 50%), calc(${valueToPx(y)} - 50%)) rotate(${rotate}deg) scale(${scale}, ${scale})`,
               }"
+              @mousedown.prevent=""
               class="yc-image-preview-img"
               ref="imageRef"
             />
@@ -73,6 +71,9 @@ import {
   onKeyStroke,
   useControlValue,
   getGlobalConfig,
+  useDraggable,
+  sleep,
+  valueToPx,
 } from '@shared/utils';
 import useModalClose from '@/components/Modal/hooks/useModalClose';
 import ImagePreviewToolbar from './ImagePreviewToolbar.vue';
@@ -121,6 +122,26 @@ const imageRef = ref<HTMLImageElement>();
 const scale = useControlValue<number>(ref(), defaultScale.value);
 // rotate
 const rotate = ref<number>(0);
+// 处理拖动
+const x = ref<number>(0);
+const y = ref<number>(0);
+const isDragging = ref<boolean>(false);
+useDraggable(imageRef, {
+  onStart: () => {
+    isDragging.value = true;
+  },
+  onMove(_, e) {
+    if (!isDragging.value) return;
+    x.value += e.movementX;
+    y.value += e.movementY;
+  },
+  async onEnd() {
+    x.value = 0;
+    y.value = 0;
+    await sleep(5);
+    isDragging.value = false;
+  },
+});
 // 处理Modal关闭
 const { outerVisible, innerVisible, handleClose, handleAfterLeave } =
   useModalClose({
