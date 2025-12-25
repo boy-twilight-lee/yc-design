@@ -44,11 +44,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { InputSearchProps, InputSearchEmits, InputExpose } from './type';
 import { IconSearch } from '@shared/icons';
 import { IconButton } from '@shared/components';
-import { sleep } from '@shared/utils';
 import YcInput from './Input.vue';
 import YcButton from '@/components/Button';
 import YcSpin from '@/components/Spin';
@@ -69,7 +68,7 @@ const inputRef = ref<InstanceType<typeof YcInput>>();
 // 处理搜索
 const handleSearch = async (e: MouseEvent) => {
   emits('search', inputRef.value!.getInputRef().value, e);
-  await sleep(0);
+  await nextTick();
   inputRef.value?.focus();
 };
 defineExpose<InputExpose>({

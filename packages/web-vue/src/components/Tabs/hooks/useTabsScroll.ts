@@ -1,6 +1,6 @@
-import { ref, computed, Ref, watch } from 'vue';
+import { ref, computed, Ref, watch, nextTick } from 'vue';
 import { Direction, RecordType } from '@shared/type';
-import { sleep, useResizeObserver } from '@shared/utils';
+import { useResizeObserver } from '@shared/utils';
 export default (params: {
   direction: Ref<Direction>;
   panes: Ref<RecordType[]>;
@@ -37,7 +37,7 @@ export default (params: {
   watch(
     () => panes.value.length,
     async () => {
-      await sleep(0);
+      await nextTick();
       calcScrollable();
     }
   );

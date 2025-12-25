@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, computed } from 'vue';
+import { ref, toRefs, computed, nextTick } from 'vue';
 import { VerificationCodeProps, VerificationCodeEmits } from './type';
 import {
   isFunction,
@@ -39,7 +39,6 @@ import {
   getSlotFunction,
   getGlobalConfig,
   nanoid,
-  sleep,
 } from '@shared/utils';
 import { default as YcInput, InputInstance } from '@/components/Input';
 defineOptions({
@@ -112,7 +111,7 @@ const handleInput = async (v: string, ev: Event, i: number) => {
     computedValue.value.slice(0, i) + value + computedValue.value.slice(i + 1);
   if (v && !inputValue.value[i + 1] && i < _length.value - 1) {
     inputList.value[i].blur();
-    await sleep(0);
+    await nextTick();
     inputList.value[i + 1].focus();
   }
 };
@@ -125,7 +124,7 @@ const handleMousedown = (e: MouseEvent, i: number) => {
 const handleClick = async (i: number) => {
   if (isWritable(i)) return;
   const index = inputValue.value.findIndex((item) => !item);
-  await sleep(0);
+  await nextTick();
   inputList.value[index]?.focus();
 };
 </script>

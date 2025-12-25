@@ -97,9 +97,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { PaginationProps, PaginationEmits, PaginationSlots } from './type';
-import { isNumber, sleep, useI18n } from '@shared/utils';
+import { isNumber, useI18n } from '@shared/utils';
 import useContext from './hooks/useContext';
 import PaginationItem from './PaginationItem.vue';
 import YcSelect from '@/components/Select';
@@ -158,11 +158,10 @@ watch(
 );
 // 处理失焦
 const handleBlur = async (e: Event) => {
-  await sleep(0);
   if (`${tempCurrent.value}`.length) {
     computedCurrent.value = tempCurrent.value;
   }
-  await sleep(0);
+  await nextTick();
   const target = e.target as HTMLInputElement;
   if (+target.value != computedCurrent.value) {
     target.value = String(computedCurrent.value);

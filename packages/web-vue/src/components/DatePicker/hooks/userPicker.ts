@@ -1,4 +1,4 @@
-import { computed, ref, toRefs } from 'vue';
+import { computed, nextTick, ref, toRefs } from 'vue';
 import { BasePickerEmits, DatePickerValue, ShortcutType } from '../type';
 import {
   dayjs,
@@ -7,7 +7,6 @@ import {
   useControlValue,
   createReusableTemplate,
   useI18n,
-  sleep,
   isUndefined,
   getDaysOfMonth,
   getWeeksOfMonth,
@@ -169,7 +168,7 @@ export default function usePicker(params: {
     const dateString = dayjs(selectDate).format('YYYY-MM-DD');
     emits('change', computedValue.value, selectDate, dateString);
     emits('ok', computedValue.value, selectDate, dateString);
-    await sleep(0);
+    await nextTick();
     computedVisible.value = false;
   };
   // 处理今天的点击

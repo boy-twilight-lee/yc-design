@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, watch } from 'vue';
+import { nextTick, ref, toRefs, watch } from 'vue';
 import { CountdownProps, CountDownEmits, CountdownSlots } from './type';
-import { isUndefined, formatSeconds, sleep } from '@shared/utils';
+import { isUndefined, formatSeconds } from '@shared/utils';
 import YcStatistic from './Statistic.vue';
 defineOptions({
   name: 'Countdown',
@@ -68,7 +68,7 @@ watch(
       startValue.value = value.value - now.value;
     }
     if (!val) return;
-    await sleep(0);
+    await nextTick();
     animation.value = true;
   },
   {

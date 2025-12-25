@@ -22,9 +22,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, toRefs } from 'vue';
+import { ref, watch, toRefs, nextTick } from 'vue';
 import {
-  sleep,
   valueToPx,
   GradientColorCalculator,
   parseColor,
@@ -102,7 +101,7 @@ watch(
   () => popupVisible.value,
   async (val) => {
     if (val || hideTrigger.value) {
-      await sleep(0);
+      await nextTick();
       const { left, right } = barRef.value!.getBoundingClientRect();
       range.value = {
         min: left,

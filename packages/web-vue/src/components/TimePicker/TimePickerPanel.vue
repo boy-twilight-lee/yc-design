@@ -78,11 +78,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import {
   isUndefined,
   isArray,
-  sleep,
   useI18n,
   BTween,
   dayjs,
@@ -150,7 +149,7 @@ const handleClick = (val: number, i: number) => {
 };
 // 处理跳转
 const hanldeJump = async (newDate: Dayjs, oldDate?: Dayjs) => {
-  await sleep(0);
+  await nextTick();
   const newTimeMap = {
     hour: newDate.hour(),
     minute: newDate.minute(),
@@ -206,7 +205,7 @@ watch(
     // 聚焦当前的input
     const curInput = inputRefs.value[curIndex.value];
     if (curInput && curInput != document.activeElement) {
-      await sleep(0);
+      await nextTick();
       curInput?.focus();
     }
     // 处理滚动逻辑

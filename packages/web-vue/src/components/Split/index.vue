@@ -36,13 +36,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, computed, watch } from 'vue';
+import { ref, toRefs, computed, watch, nextTick } from 'vue';
 import { SplitProps, SplitEmits, SplitSlots } from './type';
 import { IconDragDot } from '@shared/icons';
 import {
   isNumber,
   useDraggable,
-  sleep,
   valueToPx,
   useControlValue,
 } from '@shared/utils';
@@ -140,7 +139,7 @@ watch(
   () => computedSize.value,
   async (val) => {
     if (isDragging.value) return;
-    await sleep(0);
+    await nextTick();
     const { left, top } = splitRef.value!.getBoundingClientRect();
     x.value = left + getValue(val);
     y.value = top + getValue(val);

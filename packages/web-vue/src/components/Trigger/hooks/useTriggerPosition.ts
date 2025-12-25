@@ -1,11 +1,18 @@
-import { watch, computed, CSSProperties, Ref, ref, toRefs } from 'vue';
+import {
+  watch,
+  computed,
+  CSSProperties,
+  Ref,
+  ref,
+  toRefs,
+  nextTick,
+} from 'vue';
 import { TriggerProps } from './useContext';
 import { RecordType, PopupPosition } from '@shared/type';
 import {
   unrefElement,
   useElementBounding,
   useElementSize,
-  sleep,
   valueToPx,
   isArray,
   isString,
@@ -414,7 +421,7 @@ export default (params: {
     () => computedVisible.value,
     async (val) => {
       if (!val) return;
-      await sleep(0);
+      await nextTick();
       position.value = _position.value;
       const triggerDom = unrefElement(triggerRef);
       const popupDom = unrefElement(popupRef);

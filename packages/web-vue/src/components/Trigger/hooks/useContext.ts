@@ -1,7 +1,7 @@
-import { ref, watch, Ref, provide, inject } from 'vue';
+import { ref, watch, Ref, provide, inject, nextTick } from 'vue';
 import { TriggerType, TriggerProps as _TriggerProps } from '../type';
 import { Required } from '@shared/type';
-import { unrefElement, nanoid, sleep, isString } from '@shared/utils';
+import { unrefElement, nanoid, isString } from '@shared/utils';
 
 const TRIGGER_CONTEXT_KEY = 'trigger-context';
 type TriggerContext = {
@@ -124,7 +124,7 @@ export default function useTriggerContext(params: {
     () => computedVisible.value,
     async (val) => {
       if (!val) return;
-      await sleep(0);
+      await nextTick();
       const popupDom = unrefElement(popupRef)!;
       popupDom?.setAttribute('data-group-id', groupId);
       popupDom?.setAttribute('data-group-depth', `${depth}`);

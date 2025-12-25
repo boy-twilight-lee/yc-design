@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, toRefs, StyleValue } from 'vue';
+import { ref, computed, toRefs, StyleValue, nextTick } from 'vue';
 import {
   SelectProps,
   SelectEmits,
@@ -267,7 +267,7 @@ const handleEvent = async (
           return inputRef.value?.blur();
         }
         computedVisible.value = true;
-        await sleep(0);
+        await nextTick();
         inputRef.value?.focus();
       }
       break;

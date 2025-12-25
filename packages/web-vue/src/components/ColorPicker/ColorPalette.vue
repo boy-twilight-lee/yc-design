@@ -18,9 +18,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, toRefs, computed } from 'vue';
+import { ref, watch, toRefs, computed, nextTick } from 'vue';
 import {
-  sleep,
   valueToPx,
   parseColor,
   useDraggable,
@@ -84,7 +83,7 @@ watch(
   () => popupVisible.value,
   async (val) => {
     if (val || hideTrigger.value) {
-      await sleep(0);
+      await nextTick();
       x.value = hsv.value.s;
       y.value = 1 - hsv.value.v;
     }

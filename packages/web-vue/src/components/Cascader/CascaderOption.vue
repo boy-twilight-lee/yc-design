@@ -30,10 +30,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs, ref } from 'vue';
+import { computed, toRefs, ref, nextTick } from 'vue';
 import { CascaderOptionProps, CascaderOptionValue } from './type';
 import { IconArrowRight, IconLoading } from '@shared/icons';
-import { sleep, isFunction } from '@shared/utils';
+import { isFunction } from '@shared/utils';
 import YcCheckbox from '@/components/Checkbox';
 import {
   default as useContext,
@@ -201,7 +201,7 @@ const handleEvent = async (type: 'click' | 'hover') => {
       });
     });
     loading.value = false;
-    await sleep(0);
+    await nextTick();
   }
   // 处理展开
   if (!isLeafNode.value && expandTrigger.value == type) {

@@ -64,7 +64,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, defineComponent, h, computed, VNode } from 'vue';
+import {
+  ref,
+  toRefs,
+  defineComponent,
+  h,
+  computed,
+  VNode,
+  nextTick,
+} from 'vue';
 import {
   TypographyBaseProps,
   TypographyBaseEmits,
@@ -181,7 +189,7 @@ const handleEdit = async () => {
     ? computedText.value
     : innerText(contentRef);
   emits('edit-start');
-  await sleep(0);
+  await nextTick();
   inputRef.value?.focus();
 };
 // 处理失焦编辑借宿

@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, StyleValue } from 'vue';
+import { ref, computed, StyleValue, nextTick } from 'vue';
 import { CascaderProps, CascaderEmits, CascaderOptionValue } from './type';
 import { sleep } from '@shared/utils';
 import useContext from './hooks/useContext';
@@ -258,7 +258,7 @@ const handleEvent = async (
           curLevel.value = 1;
         }
         computedVisible.value = true;
-        await sleep(0);
+        await nextTick();
         inputRef.value?.focus();
       }
       break;

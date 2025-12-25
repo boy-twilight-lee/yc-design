@@ -29,7 +29,10 @@ const removeContainer = (position: MessagePostion) => {
   container.delete(position);
 };
 // 处理messageOpen
-const open = (props: string | MessageConfig, type: MessageType = 'info') => {
+const open = async (
+  props: string | MessageConfig,
+  type: MessageType = 'info'
+) => {
   // 消息渲染的位置
   const position = isString(props) ? 'top' : (props.position ?? 'top');
   const list = messageList[position];
@@ -71,9 +74,8 @@ const open = (props: string | MessageConfig, type: MessageType = 'info') => {
       ...message,
       isReset: true,
     };
-    nextTick().then(() => {
-      list[index].isReset = false;
-    });
+    await nextTick();
+    list[index].isReset = false;
   } else {
     list.push(message);
   }

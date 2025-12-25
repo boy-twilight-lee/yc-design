@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, toRefs, computed } from 'vue';
+import { ref, watch, toRefs, computed, nextTick } from 'vue';
 import {
   OverflowListProps,
   OverflowListEmits,
@@ -33,7 +33,6 @@ import {
 } from './type';
 import {
   throttle,
-  sleep,
   valueToPx,
   useResizeObserver,
   unrefElement,
@@ -81,7 +80,7 @@ const overflowNumber = computed(() => {
 useResizeObserver(
   listRef,
   throttle(async () => {
-    await sleep(0);
+    await nextTick();
     let maxCount = 0;
     let totalWidth = 0;
     const listWidth = listRef.value!.offsetWidth;
@@ -109,7 +108,7 @@ watch(
   () => tags.value.length,
   async () => {
     max.value = 100000;
-    await sleep(0);
+    await nextTick();
     const cur = [...document.querySelectorAll('#overflowTag')].map((item) => {
       return (item as HTMLSpanElement).offsetWidth as number;
     });

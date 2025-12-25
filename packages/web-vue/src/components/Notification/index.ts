@@ -31,7 +31,10 @@ const removeContainer = (position: NotificationPosition) => {
   container.delete(position);
 };
 // 处理NotificationOpen
-const open = (props: string | NotificationConfig, type: Type = 'info') => {
+const open = async (
+  props: string | NotificationConfig,
+  type: Type = 'info'
+) => {
   // 消息渲染的位置
   const position = isString(props)
     ? 'topRight'
@@ -77,9 +80,8 @@ const open = (props: string | NotificationConfig, type: Type = 'info') => {
       ...notification,
       isReset: true,
     };
-    nextTick().then(() => {
-      list[index].isReset = false;
-    });
+    await nextTick();
+    list[index].isReset = false;
   } else {
     list.push(notification);
   }

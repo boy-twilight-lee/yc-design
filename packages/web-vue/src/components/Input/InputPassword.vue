@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { nextTick, ref, toRefs } from 'vue';
 import { InputPasswordProps, InputPasswordEmits, InputExpose } from './type';
-import { useControlValue, sleep } from '@shared/utils';
+import { useControlValue } from '@shared/utils';
 import { IconEyeOpen, IconEyeClose } from '@shared/icons';
 import { IconButton } from '@shared/components';
 import YcInput from './Input.vue';
@@ -58,7 +58,7 @@ const inputRef = ref<InstanceType<typeof YcInput>>();
 // 处理点击
 const handleClick = async () => {
   inputRef.value?.recordCursor?.();
-  await sleep(0);
+  await nextTick();
   computedVisibility.value = !computedVisibility.value;
   inputRef.value?.setCursor?.();
 };

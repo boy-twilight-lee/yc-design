@@ -1,5 +1,5 @@
-import { ref, Ref, computed, CSSProperties, watch } from 'vue';
-import { useDraggable, sleep, valueToPx } from '@shared/utils';
+import { ref, Ref, computed, CSSProperties, watch, nextTick } from 'vue';
+import { useDraggable, valueToPx } from '@shared/utils';
 
 export default (params: {
   draggable: Ref<boolean>;
@@ -54,7 +54,7 @@ export default (params: {
     () => visible.value,
     async (v) => {
       if (!v) return;
-      await sleep(0);
+      await nextTick();
       const offsetX = (window.innerWidth - modalRef.value!.offsetWidth) / 2;
       const offsetY = (window.innerHeight - modalRef.value!.offsetHeight) / 2;
       const finalX = offsetX <= 0 ? 0 : offsetX;
