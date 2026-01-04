@@ -24,13 +24,10 @@ export default (params: {
     emits,
   } = params;
   const curIndex = ref<number>(-1);
-  if (!hotkeys.value) {
-    return {
-      curIndex,
-    };
-  }
   onKeyStroke(['ArrowUp', 'ArrowDown', 'Enter'], (e) => {
-    if (!computedVisible.value || !options.value.length) return;
+    if (!computedVisible.value || !options.value.length || !hotkeys.value) {
+      return;
+    }
     const { key } = e;
     e.preventDefault();
     if (key == 'ArrowUp') {

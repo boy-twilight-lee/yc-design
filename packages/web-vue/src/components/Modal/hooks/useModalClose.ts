@@ -70,12 +70,10 @@ export default (params: {
     cancelEmits && emits('cancel', ev);
     computedVisible.value = false;
   };
-  if (escToClose.value) {
-    onKeyStroke(['Escape'], (ev) => {
-      if (!computedVisible.value) return;
-      handleClose('esc', ev);
-    });
-  }
+  onKeyStroke(['Escape'], (ev) => {
+    if (!computedVisible.value || !escToClose.value) return;
+    handleClose('esc', ev);
+  });
   // 检测
   watch(
     () => computedVisible.value,

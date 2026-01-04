@@ -91,15 +91,14 @@ const handleCurrentChange = (type: string) => {
 };
 // 初始化lisenter
 const intLisenter = () => {
-  if (keyboard.value) {
-    const map: Record<string, string> = {
-      ArrowLeft: 'pre',
-      ArrowRight: 'next',
-    };
-    onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
-      handleCurrentChange(map[e.key]);
-    });
-  }
+  const map: Record<string, string> = {
+    ArrowLeft: 'pre',
+    ArrowRight: 'next',
+  };
+  onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
+    if (!computedVisible.value || !keyboard.value) return;
+    handleCurrentChange(map[e.key]);
+  });
 };
 intLisenter();
 </script>
