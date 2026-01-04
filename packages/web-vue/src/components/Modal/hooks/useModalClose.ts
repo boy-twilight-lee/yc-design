@@ -72,11 +72,11 @@ export default (params: {
   };
   // 注册事件监听器
   watchEffect(() => {
-    const listenter: Array<() => void> = [];
+    const lisenters: Array<() => void> = [];
     if (!computedVisible.value || !escToClose.value) {
-      return listenter[0]?.();
+      return lisenters[0]?.();
     }
-    listenter[0] = onKeyStroke(['Escape'], (ev) => {
+    lisenters[0] = onKeyStroke(['Escape'], (ev) => {
       handleClose('esc', ev);
     });
   });

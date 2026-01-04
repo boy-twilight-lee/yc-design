@@ -91,11 +91,11 @@ const handleCurrentChange = (type: string) => {
 };
 // 注册事件监听器
 watchEffect(() => {
-  const lisenter: Array<() => void> = [];
+  const lisenters: Array<() => void> = [];
   if (!computedVisible.value || !keyboard.value) {
-    return lisenter[0]?.();
+    return lisenters[0]?.();
   }
-  lisenter[0] = onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
+  lisenters[0] = onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
     const map: Record<string, string> = {
       ArrowLeft: 'pre',
       ArrowRight: 'next',
