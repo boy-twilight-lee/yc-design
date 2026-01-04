@@ -12,13 +12,13 @@
     "preview:docs": "pnpm --filter yc-design-docs preview"
   },
   "dependencies": {
-    "dayjs": "^1.11.13",
     "@tanstack/vue-virtual": "^3.13.12",
     "@vueuse/core": "^12.0.0",
     "b-tween": "^0.3.3",
+    "dayjs": "^1.11.13",
     "nanoid": "^5.1.2",
     "tinycolor2": "^1.6.0",
-    "yc-design-vue": "^2.5.3"
+    "yc-design-vue": "^2.5.5"
   },
   "devDependencies": {
     "@arco-design/web-vue": "^2.57.0",
@@ -37,6 +37,8 @@
     "husky": "^9.1.7",
     "less": "^4.4.1",
     "lint-staged": "^15.5.2",
+    "nprogress": "^0.2.0",
+    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "terser": "^5.43.1",
     "typescript": "^5.5.3",
@@ -44,12 +46,10 @@
     "unplugin-vue-components": "^0.27.5",
     "vite": "^5.4.1",
     "vite-plugin-dts": "^4.5.4",
-    "vue": "^3.3.4",
-    "vue-tsc": "^2.0.29",
-    "nprogress": "^0.2.0",
-    "postcss": "^8.5.6",
     "vitepress": "^1.6.4",
-    "vitepress-plugin-nprogress": "^0.1.0"
+    "vitepress-plugin-nprogress": "^0.1.0",
+    "vue": "^3.3.4",
+    "vue-tsc": "^2.0.29"
   },
   "workspaces": [
     "packages/*"

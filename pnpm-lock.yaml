@@ -27,8 +27,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
       yc-design-vue:
-        specifier: ^2.5.3
-        version: 2.5.3(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+        specifier: ^2.5.5
+        version: 2.5.5(vue@3.5.25(typescript@5.9.3))
     devDependencies:
       '@arco-design/web-vue':
         specifier: ^2.57.0
@@ -2307,8 +2307,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  yc-design-vue@2.5.3:
-    resolution: {integrity: sha512-Um67d8ZK8+QBhZMhoMr9by3MP0qyn57gItcVTUBs8MYlznS/a61gDTH2U/ba0zxBRUzjtC8VSAGFbLiD21wBig==}
+  yc-design-vue@2.5.5:
+    resolution: {integrity: sha512-jy+F3RvnW6vq0ZQyjIYtsnTh+6LSo8wUX4w/3ABF22nXfxI65xkB7vw13kq1+Wnm8CbrPnfcIG5USEz/wRtCtg==}
     peerDependencies:
       vue: ^3.3.4
 
@@ -4605,17 +4605,9 @@ snapshots:
 
   yaml@2.8.1: {}
 
-  yc-design-vue@2.5.3(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3)):
+  yc-design-vue@2.5.5(vue@3.5.25(typescript@5.9.3)):
     dependencies:
-      '@tanstack/vue-virtual': 3.13.12(vue@3.5.25(typescript@5.9.3))
-      '@vueuse/core': 12.8.2(typescript@5.9.3)
-      b-tween: 0.3.3
-      dayjs: 1.11.19
-      nanoid: 5.1.6
-      tinycolor2: 1.6.0
       vue: 3.5.25(typescript@5.9.3)
-    transitivePeerDependencies:
-      - typescript
 
   yocto-queue@0.1.0: {}
 
