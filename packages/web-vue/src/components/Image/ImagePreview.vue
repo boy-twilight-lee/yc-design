@@ -16,12 +16,12 @@
         <div
           v-show="innerVisible"
           class="yc-image-preview-wrapper"
-          @click.self="handleClose('mask', $event, false)"
+          @click.self="handleClose('mask', $event)"
         >
           <!-- img -->
           <div
             class="yc-image-preview-img-container"
-            @click.self="!isDragging && handleClose('mask', $event, false)"
+            @click.self="!isDragging && handleClose('mask', $event)"
           >
             <img
               :src="src"
@@ -48,7 +48,7 @@
           <div
             v-if="closable"
             class="yc-image-preview-close-btn"
-            @click="handleClose('closeBtn', $event, false)"
+            @click="handleClose('closeBtn', $event)"
           >
             <icon-close />
           </div>

@@ -201,6 +201,9 @@ const {
   onBeforeOk,
   onBeforeCancel,
   emits,
+  onClose: (ev) => {
+    emits('cancel', ev);
+  },
 });
 // headerRef,用于拖拽
 const headerRef = ref<HTMLDivElement>();

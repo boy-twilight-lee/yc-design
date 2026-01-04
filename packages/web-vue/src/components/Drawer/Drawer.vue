@@ -176,6 +176,9 @@ const {
   onBeforeCancel,
   onBeforeOk,
   emits,
+  onClose: (ev) => {
+    emits('cancel', ev);
+  },
 });
 </script>
 

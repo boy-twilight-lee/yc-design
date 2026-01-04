@@ -19,6 +19,7 @@ export default (params: {
   onBeforeOk: OnBeforeOk;
   onBeforeCancel: OnBeforeCancel;
   emits: ModalEmits;
+  onClose?: (ev: MouseEvent | KeyboardEvent) => void;
 }) => {
   const {
     maskClosable,
@@ -28,6 +29,7 @@ export default (params: {
     onBeforeCancel,
     onBeforeOk,
     emits,
+    onClose,
   } = params;
   // 内存visible，用于显示组件
   const computedVisible = useControlValue<boolean>(
@@ -51,8 +53,7 @@ export default (params: {
   // 处理关闭
   const handleClose = async (
     type: CloseEventType,
-    ev: MouseEvent | KeyboardEvent,
-    cancelEmits: boolean = true
+    ev: MouseEvent | KeyboardEvent
   ) => {
     // 执行关闭之前的函数
     const isClose = ['confirmBtn', 'cancelBtn'].includes(type)
@@ -67,7 +68,7 @@ export default (params: {
     if (type == 'confirmBtn') {
       emits('ok');
     }
-    cancelEmits && emits('cancel', ev);
+    onClose?.(ev);
     computedVisible.value = false;
   };
   // 注册事件监听器
@@ -87,7 +88,6 @@ export default (params: {
       handleClose('esc', ev);
     });
   });
-
   return {
     asyncLoading,
     computedVisible,
