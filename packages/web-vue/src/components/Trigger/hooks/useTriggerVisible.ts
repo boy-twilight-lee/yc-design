@@ -172,16 +172,16 @@ export default (params: {
   };
   // 点击到contentRef外层关闭
   const handleClickOutsideClose = () => {
-    if (
-      !clickOutsideToClose.value ||
-      (!isValidTrigger('click') && !isValidTrigger('contextMenu'))
-    ) {
-      return;
-    }
     onClickOutside(
       popupRef,
       (e) => {
-        if (disabled.value) return;
+        if (
+          disabled.value ||
+          !clickOutsideToClose.value ||
+          (!isValidTrigger('click') && !isValidTrigger('contextMenu'))
+        ) {
+          return;
+        }
         // 是否处理过嵌套情况
         const isHandle = clickOutsideHandler(e);
         // 处理正常逻辑
@@ -199,11 +199,15 @@ export default (params: {
   // 处理滚动关闭,滚动关闭存在问题
   const handleScrollToClose = async () => {
     await nextTick();
-    // 检测滚动关闭
-    if (!scrollToClose.value || !scrollContainer.value) return;
     // 处理scroll
     useEventListener(scrollContainer, 'scroll', () => {
-      if (!computedVisible.value) return;
+      if (
+        !computedVisible.value ||
+        !scrollToClose.value ||
+        !scrollContainer.value
+      ) {
+        return;
+      }
       const { scrollTop, scrollLeft } = scrollContainer.value!;
       if (
         Math.abs(scrollTop - oldScrollTop) >= scrollToCloseDistance.value ||

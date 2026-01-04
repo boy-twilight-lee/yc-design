@@ -196,27 +196,24 @@ const handleAction = (action: string) => {
 };
 // 初始化监听器
 const intLisenter = () => {
-  if (wheelZoom.value) {
-    // 处理滚轮缩放
-    useEventListener('wheel', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      // 判断是放大还是缩小
-      const delta = e.deltaY < 0 ? 1 : -1;
-      // 计算新的缩放比例
-      scale.value *= Math.pow(zoomRate.value, delta);
-    });
-  }
-  if (keyboard.value) {
-    const map: Record<string, string> = {
-      ArrowUp: 'zoomIn',
-      ArrowDown: 'zoomOut',
-      ' ': 'originalSize',
-    };
-    onKeyStroke(['ArrowUp', 'ArrowDown', ' '], (e) => {
-      handleAction(map[e.key]);
-    });
-  }
+  useEventListener('wheel', (e) => {
+    if (!innerVisible.value || !wheelZoom.value) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // 判断是放大还是缩小
+    const delta = e.deltaY < 0 ? 1 : -1;
+    // 计算新的缩放比例
+    scale.value *= Math.pow(zoomRate.value, delta);
+  });
+  const map: Record<string, string> = {
+    ArrowUp: 'zoomIn',
+    ArrowDown: 'zoomOut',
+    ' ': 'originalSize',
+  };
+  onKeyStroke(['ArrowUp', 'ArrowDown', ' '], (e) => {
+    if (!innerVisible.value || !keyboard.value) return;
+    handleAction(map[e.key]);
+  });
 };
 intLisenter();
 </script>
