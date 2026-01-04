@@ -65,23 +65,19 @@ export default function useCalcMaxMenuItem({
   };
   // 使用 watchEffect 来优雅地管理副作用
   watchEffect((onCleanup) => {
+    const lisenters: Array<() => void> = [];
+    onCleanup(() => {
+      lisenters.forEach((v) => v());
+    });
     if (mode.value === 'horizontal') {
-      const { stop: stopResizeObserver } = useResizeObserver(
-        menuRef,
-        throttle(updateMaxItems, 200)
-      );
-      const unwatchWidths = watch(menuItemWidths, updateMaxItems, {
-        deep: true,
-      });
-      const unwatchTree = watch(() => menuTree.value.length, updateMaxItems);
-      onCleanup(() => {
-        stopResizeObserver();
-        unwatchWidths();
-        unwatchTree();
-      });
-    } else {
-      updateMaxItems();
+      return lisenters.forEach((v) => v());
     }
+    const { stop } = useResizeObserver(menuRef, throttle(updateMaxItems, 200));
+    lisenters[0] = stop;
+    lisenters[1] = watch(menuItemWidths, updateMaxItems, {
+      deep: true,
+    });
+    lisenters[2] = watch(() => menuTree.value.length, updateMaxItems);
   });
 
   return {

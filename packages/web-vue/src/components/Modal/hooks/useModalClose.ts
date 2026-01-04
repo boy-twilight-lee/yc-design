@@ -1,4 +1,4 @@
-import { nextTick, ref, Ref, watch } from 'vue';
+import { nextTick, ref, Ref, watch, watchEffect } from 'vue';
 import { OnBeforeOk, OnBeforeCancel } from '../type';
 import { ModalEmits } from '@/components/Modal/type';
 import { onKeyStroke, useControlValue } from '@shared/utils';
@@ -70,9 +70,15 @@ export default (params: {
     cancelEmits && emits('cancel', ev);
     computedVisible.value = false;
   };
-  onKeyStroke(['Escape'], (ev) => {
-    if (!computedVisible.value || !escToClose.value) return;
-    handleClose('esc', ev);
+  // 注册事件监听器
+  watchEffect(() => {
+    const listenter: Array<() => void> = [];
+    if (!computedVisible.value || !escToClose.value) {
+      return listenter[0]?.();
+    }
+    listenter[0] = onKeyStroke(['Escape'], (ev) => {
+      handleClose('esc', ev);
+    });
   });
   // 检测
   watch(

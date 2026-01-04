@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import { AvatarProps, AvatarSlots, AvatarEmits } from './type';
 import { IconImageClose } from '@shared/icons';
 import { valueToPx, useResizeObserver } from '@shared/utils';
@@ -89,16 +89,25 @@ const handleError = (e: Event) => {
   emits('error', e);
 };
 // 检测text的大小从而动态计算字体大小
-const initOvserver = () => {
-  if (!autoFixFontSize.value) return;
-  useResizeObserver(textRef, () => {
-    const avatarWidth = size.value ?? avatarRef.value!.offsetWidth;
-    const textWidth = textRef.value!.offsetWidth;
-    const textScale = avatarWidth / (textWidth + 8);
-    scale.value = avatarWidth && textScale < 1 ? textScale : 1;
-  });
-};
-initOvserver();
+watchEffect(() => {
+  const lisenters: Array<() => void> = [];
+  if (!autoFixFontSize.value) {
+    return lisenters[0]?.();
+  }
+  const { stop } = useResizeObserver(
+    textRef,
+    () => {
+      const avatarWidth = size.value ?? avatarRef.value!.offsetWidth;
+      const textWidth = textRef.value!.offsetWidth;
+      const textScale = avatarWidth / (textWidth + 8);
+      scale.value = avatarWidth && textScale < 1 ? textScale : 1;
+    },
+    {
+      box: 'border-box',
+    }
+  );
+  lisenters[0] = stop;
+});
 </script>
 
 <style lang="less">

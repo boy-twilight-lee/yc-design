@@ -1,4 +1,4 @@
-import { nextTick, Ref, ref, toRefs, computed, watch } from 'vue';
+import { nextTick, Ref, ref, toRefs, computed, watch, watchEffect } from 'vue';
 import { TriggerEmits, TriggerType } from '../type';
 import { RecordType } from '@shared/type';
 import { default as useContext, TriggerProps } from './useContext';
@@ -42,7 +42,7 @@ export default (params: {
     onTriggerMouseleave,
     onTriggerBlur,
     onTriggerFocus,
-    onClickOutSide,
+    onClickOutSide: clickOutSide,
   } = props;
   // visible
   const computedVisible = useControlValue<boolean>(
@@ -170,55 +170,56 @@ export default (params: {
     computedVisible.value = false;
     onTriggerBlur?.();
   };
-  // 点击到contentRef外层关闭
-  const handleClickOutsideClose = () => {
-    onClickOutside(
-      popupRef,
-      (e) => {
+  // 初始化事件监听器
+  watchEffect(() => {
+    const lisenters: Array<() => void> = [];
+    if (
+      disabled.value ||
+      !clickOutsideToClose.value ||
+      (!isValidTrigger('click') && !isValidTrigger('contextMenu'))
+    ) {
+      lisenters[0]?.();
+    } else {
+      // 点击到contentRef外层关闭
+      const { stop } = onClickOutside(
+        popupRef,
+        (e) => {
+          // 是否处理过嵌套情况
+          const isHandle = clickOutsideHandler(e);
+          // 处理正常逻辑
+          if (!computedVisible.value || isHandle) {
+            return;
+          }
+          computedVisible.value = false;
+          clickOutSide?.();
+        },
+        {
+          ignore: [triggerRef],
+        }
+      );
+      lisenters[0] = stop;
+    }
+    if (
+      !computedVisible.value ||
+      !scrollToClose.value ||
+      !scrollContainer.value
+    ) {
+      lisenters[1]?.();
+    } else {
+      // 处理scroll
+      lisenters[1] = useEventListener(scrollContainer, 'scroll', () => {
+        const { scrollTop, scrollLeft } = scrollContainer.value!;
         if (
-          disabled.value ||
-          !clickOutsideToClose.value ||
-          (!isValidTrigger('click') && !isValidTrigger('contextMenu'))
+          Math.abs(scrollTop - oldScrollTop) >= scrollToCloseDistance.value ||
+          Math.abs(scrollLeft - oldScrollLeft) >= scrollToCloseDistance.value
         ) {
-          return;
+          computedVisible.value = false;
+          oldScrollTop = scrollTop;
+          oldScrollLeft = scrollLeft;
         }
-        // 是否处理过嵌套情况
-        const isHandle = clickOutsideHandler(e);
-        // 处理正常逻辑
-        if (!computedVisible.value || isHandle) {
-          return;
-        }
-        computedVisible.value = false;
-        onClickOutSide?.();
-      },
-      {
-        ignore: [triggerRef],
-      }
-    );
-  };
-  // 处理滚动关闭,滚动关闭存在问题
-  const handleScrollToClose = async () => {
-    await nextTick();
-    // 处理scroll
-    useEventListener(scrollContainer, 'scroll', () => {
-      if (
-        !computedVisible.value ||
-        !scrollToClose.value ||
-        !scrollContainer.value
-      ) {
-        return;
-      }
-      const { scrollTop, scrollLeft } = scrollContainer.value!;
-      if (
-        Math.abs(scrollTop - oldScrollTop) >= scrollToCloseDistance.value ||
-        Math.abs(scrollLeft - oldScrollLeft) >= scrollToCloseDistance.value
-      ) {
-        computedVisible.value = false;
-        oldScrollTop = scrollTop;
-        oldScrollLeft = scrollLeft;
-      }
-    });
-  };
+      });
+    }
+  });
   // 检测visible确定第一次的left top
   watch(
     () => computedVisible.value,
@@ -230,9 +231,6 @@ export default (params: {
       oldScrollTop = scrollTop;
     }
   );
-  // 处理关闭
-  handleClickOutsideClose();
-  handleScrollToClose();
   return {
     mouseX,
     mouseY,

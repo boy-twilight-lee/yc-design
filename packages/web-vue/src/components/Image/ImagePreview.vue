@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { ref, toRefs, watchEffect } from 'vue';
 import {
   ImagePreviewProps,
   ImagePreviewEmits,
@@ -194,28 +194,34 @@ const handleAction = (action: string) => {
       break;
   }
 };
-// 初始化监听器
-const intLisenter = () => {
-  useEventListener('wheel', (e) => {
-    if (!innerVisible.value || !wheelZoom.value) return;
-    e.preventDefault();
-    e.stopPropagation();
-    // 判断是放大还是缩小
-    const delta = e.deltaY < 0 ? 1 : -1;
-    // 计算新的缩放比例
-    scale.value *= Math.pow(zoomRate.value, delta);
-  });
-  const map: Record<string, string> = {
-    ArrowUp: 'zoomIn',
-    ArrowDown: 'zoomOut',
-    ' ': 'originalSize',
-  };
-  onKeyStroke(['ArrowUp', 'ArrowDown', ' '], (e) => {
-    if (!innerVisible.value || !keyboard.value) return;
-    handleAction(map[e.key]);
-  });
-};
-intLisenter();
+// 注册事件监听器
+watchEffect(() => {
+  const lisenters: Array<() => void> = [];
+  if (!innerVisible.value || !wheelZoom.value) {
+    lisenters[0]?.();
+  } else {
+    lisenters[0] = useEventListener('wheel', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      // 判断是放大还是缩小
+      const delta = e.deltaY < 0 ? 1 : -1;
+      // 计算新的缩放比例
+      scale.value *= Math.pow(zoomRate.value, delta);
+    });
+  }
+  if (!innerVisible.value || !keyboard.value) {
+    lisenters[1]?.();
+  } else {
+    lisenters[1] = onKeyStroke(['ArrowUp', 'ArrowDown', ' '], (e) => {
+      const map: Record<string, string> = {
+        ArrowUp: 'zoomIn',
+        ArrowDown: 'zoomOut',
+        ' ': 'originalSize',
+      };
+      handleAction(map[e.key]);
+    });
+  }
+});
 </script>
 
 <style lang="less">

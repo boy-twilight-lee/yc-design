@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue';
+import { toRefs, watchEffect } from 'vue';
 import {
   ImagePreviewGroupProps,
   ImagePreviewGroupEmits,
@@ -89,16 +89,18 @@ const handleCurrentChange = (type: string) => {
   }
   computedCurrent.value = index;
 };
-// 初始化lisenter
-const intLisenter = () => {
-  const map: Record<string, string> = {
-    ArrowLeft: 'pre',
-    ArrowRight: 'next',
-  };
-  onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
-    if (!computedVisible.value || !keyboard.value) return;
+// 注册事件监听器
+watchEffect(() => {
+  const lisenter: Array<() => void> = [];
+  if (!computedVisible.value || !keyboard.value) {
+    return lisenter[0]?.();
+  }
+  lisenter[0] = onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
+    const map: Record<string, string> = {
+      ArrowLeft: 'pre',
+      ArrowRight: 'next',
+    };
     handleCurrentChange(map[e.key]);
   });
-};
-intLisenter();
+});
 </script>
