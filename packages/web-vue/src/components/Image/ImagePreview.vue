@@ -143,16 +143,21 @@ useDraggable(imageRef, {
   },
 });
 // 处理Modal关闭
-const { outerVisible, innerVisible, handleClose, handleAfterLeave } =
-  useModalClose({
-    visible,
-    defaultVisible,
-    escToClose,
-    maskClosable,
-    onBeforeOk: () => true,
-    onBeforeCancel: () => true,
-    emits: emits as (...args: any) => void,
-  });
+const {
+  computedVisible,
+  outerVisible,
+  innerVisible,
+  handleClose,
+  handleAfterLeave,
+} = useModalClose({
+  visible,
+  defaultVisible,
+  escToClose,
+  maskClosable,
+  onBeforeOk: () => true,
+  onBeforeCancel: () => true,
+  emits: emits as (...args: any) => void,
+});
 // 处理action
 const handleAction = (action: string) => {
   switch (action) {
@@ -197,7 +202,7 @@ const handleAction = (action: string) => {
 // 注册事件监听器
 watchEffect(() => {
   const lisenters: Array<() => void> = [];
-  if (!innerVisible.value || !wheelZoom.value) {
+  if (!computedVisible.value || !wheelZoom.value) {
     lisenters[0]?.();
   } else {
     lisenters[0] = useEventListener('wheel', (e) => {
@@ -209,7 +214,7 @@ watchEffect(() => {
       scale.value *= Math.pow(zoomRate.value, delta);
     });
   }
-  if (!innerVisible.value || !keyboard.value) {
+  if (!computedVisible.value || !keyboard.value) {
     lisenters[1]?.();
   } else {
     lisenters[1] = onKeyStroke(['ArrowUp', 'ArrowDown', ' '], (e) => {

@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, computed, watchEffect } from 'vue';
+import { ref, toRefs, computed, watch } from 'vue';
 import { useDraggable, useResizeObserver, valueToPx } from '@shared/utils';
 import { Direction } from '@shared/type';
 import useContext from './hooks/useContext';
@@ -98,11 +98,15 @@ const { x, y, isDragging } = useDraggable(dragRef, {
     }
   },
 });
-// 检测是否拖拽
-watchEffect(() => {
-  _isDragging.value = isDragging.value;
-});
-
+watch(
+  () => isDragging.value,
+  (val) => {
+    _isDragging.value = val;
+  },
+  {
+    immediate: true,
+  }
+);
 // 处理鼠标点击
 const handleClick = (e: MouseEvent) => {
   const { offsetX, offsetY } = e;

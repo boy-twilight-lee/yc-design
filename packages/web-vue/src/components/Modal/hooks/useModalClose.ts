@@ -71,8 +71,15 @@ export default (params: {
     computedVisible.value = false;
   };
   // 注册事件监听器
-  watchEffect(() => {
+  watchEffect(async () => {
     const lisenters: Array<() => void> = [];
+    if (computedVisible.value) {
+      outerVisible.value = true;
+      await nextTick();
+      innerVisible.value = true;
+    } else {
+      innerVisible.value = false;
+    }
     if (!computedVisible.value || !escToClose.value) {
       return lisenters[0]?.();
     }
@@ -80,25 +87,10 @@ export default (params: {
       handleClose('esc', ev);
     });
   });
-  // 检测
-  watch(
-    () => computedVisible.value,
-    async (val) => {
-      if (!val) {
-        innerVisible.value = val;
-      } else {
-        outerVisible.value = val;
-        await nextTick();
-        innerVisible.value = val;
-      }
-    },
-    {
-      immediate: true,
-    }
-  );
 
   return {
     asyncLoading,
+    computedVisible,
     outerVisible,
     innerVisible,
     handleClose,
