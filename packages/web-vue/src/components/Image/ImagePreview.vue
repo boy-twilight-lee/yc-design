@@ -205,14 +205,20 @@ watchEffect(() => {
   if (!computedVisible.value || !wheelZoom.value) {
     lisenters[0]?.();
   } else {
-    lisenters[0] = useEventListener('wheel', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      // 判断是放大还是缩小
-      const delta = e.deltaY < 0 ? 1 : -1;
-      // 计算新的缩放比例
-      scale.value *= Math.pow(zoomRate.value, delta);
-    });
+    lisenters[0] = useEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // 判断是放大还是缩小
+        const delta = e.deltaY < 0 ? 1 : -1;
+        // 计算新的缩放比例
+        scale.value *= Math.pow(zoomRate.value, delta);
+      },
+      {
+        passive: false,
+      }
+    );
   }
   if (!computedVisible.value || !keyboard.value) {
     lisenters[1]?.();
