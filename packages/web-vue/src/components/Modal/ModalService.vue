@@ -2,16 +2,12 @@
   <yc-modal
     v-bind="props"
     v-model:visible="visible"
-    popup-container=".yc-overlay-modal"
     :modal-class="[
       'yc-service-modal',
       {
         [`yc-service-modal-${type}`]: !!type,
       },
     ]"
-    :style="{
-      position: 'fixed',
-    }"
     @ok="onOk?.()"
     @cancel="onCancel?.()"
     @before-open="onBeforeOpen?.()"
@@ -85,6 +81,7 @@ const props = withDefaults(defineProps<ModalConfig>(), {
     return true;
   },
   content: '',
+  popupContainer: undefined,
 });
 // visible
 const visible = ref<boolean>(false);

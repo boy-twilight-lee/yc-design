@@ -3,34 +3,36 @@ import { Type } from '@shared/type';
 import { ModalConfig, ModalMethod } from './type';
 import _Modal from './Modal.vue';
 import _ModalService from './ModalService.vue';
+import { getElement } from '@shared/utils';
 
 export type ModalInstance = InstanceType<typeof _Modal>;
 export * from './type';
 
-// 容器实例
-let container: HTMLDivElement;
 // 打开modal
 const open = (props: ModalConfig) => {
   // 挂在容器
-  if (!container) {
-    container = document.createElement('div');
-    container.className = 'yc-overlay yc-overlay-modal';
-    document.body.append(container);
-  }
+  const popupContainer =
+    getElement(props.popupContainer) || document.createElement('div');
+  document.body.append(popupContainer);
   // 关闭函数
   const close = () => {
-    render(null, container as HTMLDivElement);
+    render(null, popupContainer);
+    document.body.removeChild(popupContainer);
   };
   // 挂在vnode
   const vnode = h(_ModalService, {
     ...props,
+    popupContainer,
+    style: {
+      position: props.popupContainer ? 'absolute' : 'fixed',
+    },
     onClose: () => {
       close();
       props.onClose?.();
     },
   });
   // 渲染 VNode 到容器
-  render(vnode, container);
+  render(vnode, popupContainer);
   return {
     close,
   };

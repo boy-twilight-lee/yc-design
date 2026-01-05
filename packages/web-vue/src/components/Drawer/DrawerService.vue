@@ -2,10 +2,6 @@
   <yc-drawer
     v-bind="props"
     v-model:visible="visible"
-    :style="{
-      position: 'fixed',
-    }"
-    popup-container=".yc-overlay-drawer"
     @ok="onOk?.()"
     @cancel="onCancel?.()"
     @before-open="onBeforeOpen?.()"

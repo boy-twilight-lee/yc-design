@@ -63,10 +63,7 @@ export type OnBeforeOk = (
 
 export type OnBeforeCancel = () => boolean;
 
-export type ModalConfig = Omit<
-  ModalProps,
-  'visible' | 'defaultVisible' | 'popupContainer'
-> & {
+export type ModalConfig = Omit<ModalProps, 'visible' | 'defaultVisible'> & {
   title?: RenderContent;
   content?: RenderContent;
   type?: Type;

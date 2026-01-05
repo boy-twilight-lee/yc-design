@@ -1,18 +1,14 @@
 <template>
   <div class="test">
-    <yc-image
-      width="200"
-      src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"
-      :preview-props="{
-        actionsLayout: ['rotateRight', 'zoomIn', 'zoomOut'],
-      }"
+    <yc-button
+      @click="
+        $drawer.open({
+          content: '11',
+        })
+      "
     >
-      <template #preview-actions>
-        <yc-image-preview-action name="下载"
-          ><icon-download
-        /></yc-image-preview-action>
-      </template>
-    </yc-image>
+      测试
+    </yc-button>
   </div>
 </template>
 
