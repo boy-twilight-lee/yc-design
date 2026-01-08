@@ -12,7 +12,12 @@
         <div v-show="innerVisible" class="yc-image-preview-mask"></div>
       </transition>
       <!-- body -->
-      <transition name="fade" @after-leave="handleAfterLeave">
+      <transition
+        name="fade"
+        @before-open="handleRegisterEvent"
+        @before-close="handleClearEvent"
+        @after-leave="handleAfterLeave"
+      >
         <div
           v-show="innerVisible"
           class="yc-image-preview-wrapper"
@@ -59,7 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, watchEffect } from 'vue';
+import { ref, toRefs } from 'vue';
 import {
   ImagePreviewProps,
   ImagePreviewEmits,
@@ -71,12 +76,11 @@ import {
   onKeyStroke,
   useControlValue,
   getGlobalConfig,
-  useDraggable,
-  sleep,
   valueToPx,
 } from '@shared/utils';
 import useModalClose from '@/components/Modal/hooks/useModalClose';
 import ImagePreviewToolbar from './ImagePreviewToolbar.vue';
+import useImageDraggable from './hooks/useImageDraggable';
 defineOptions({
   name: 'ImagePreview',
   inheritAttrs: false,
@@ -116,48 +120,27 @@ const {
 } = toRefs(props);
 // 接收全局属性
 const { teleportStyle, popupContainer } = getGlobalConfig(props);
-// imageRef
-const imageRef = ref<HTMLImageElement>();
+// 监听器
+const lisenters: Array<() => void> = [];
 // scale
 const scale = useControlValue<number>(ref(), defaultScale.value);
 // rotate
 const rotate = ref<number>(0);
-// 处理拖动
-const x = ref<number>(0);
-const y = ref<number>(0);
-const isDragging = ref<boolean>(false);
-useDraggable(imageRef, {
-  onStart: () => {
-    isDragging.value = true;
-  },
-  onMove(_, e) {
-    if (!isDragging.value) return;
-    x.value += e.movementX;
-    y.value += e.movementY;
-  },
-  async onEnd() {
-    x.value = 0;
-    y.value = 0;
-    await sleep(5);
-    isDragging.value = false;
-  },
-});
+// imageRef
+const imageRef = ref<HTMLImageElement>();
 // 处理Modal关闭
-const {
-  computedVisible,
-  outerVisible,
-  innerVisible,
-  handleClose,
-  handleAfterLeave,
-} = useModalClose({
-  visible,
-  defaultVisible,
-  escToClose,
-  maskClosable,
-  onBeforeOk: () => true,
-  onBeforeCancel: () => true,
-  emits: emits as (...args: any) => void,
-});
+const { outerVisible, innerVisible, handleClose, handleAfterLeave } =
+  useModalClose({
+    visible,
+    defaultVisible,
+    escToClose,
+    maskClosable,
+    onBeforeOk: () => true,
+    onBeforeCancel: () => true,
+    emits: emits as (...args: any) => void,
+  });
+// 处理图片拖动
+const { x, y, isDragging } = useImageDraggable(imageRef);
 // 处理action
 const handleAction = (action: string) => {
   switch (action) {
@@ -199,12 +182,10 @@ const handleAction = (action: string) => {
       break;
   }
 };
-// 注册事件监听器
-watchEffect(() => {
-  const lisenters: Array<() => void> = [];
-  if (!computedVisible.value || !wheelZoom.value) {
-    lisenters[0]?.();
-  } else {
+// 处理注册事件
+const handleRegisterEvent = () => {
+  emits('beforeOpen');
+  if (wheelZoom.value) {
     lisenters[0] = useEventListener(
       'wheel',
       (e) => {
@@ -220,9 +201,7 @@ watchEffect(() => {
       }
     );
   }
-  if (!computedVisible.value || !keyboard.value) {
-    lisenters[1]?.();
-  } else {
+  if (keyboard.value) {
     lisenters[1] = onKeyStroke(['ArrowUp', 'ArrowDown', ' '], (e) => {
       const map: Record<string, string> = {
         ArrowUp: 'zoomIn',
@@ -232,7 +211,12 @@ watchEffect(() => {
       handleAction(map[e.key]);
     });
   }
-});
+};
+// 处理事件注销
+const handleClearEvent = () => {
+  emits('beforeClose');
+  lisenters.forEach((v) => v());
+};
 </script>
 
 <style lang="less">

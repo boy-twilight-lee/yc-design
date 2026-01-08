@@ -45,10 +45,13 @@ export default (params: {
   const innerVisible = ref<boolean>(false);
   // loading
   const asyncLoading = ref<boolean>(false);
+  // lisenters
+  const lisenters: Array<() => void> = [];
   // 处理动画离开
   const handleAfterLeave = () => {
     emits('close');
     outerVisible.value = false;
+    lisenters.every((v) => v());
   };
   // 处理关闭
   const handleClose = async (
@@ -71,16 +74,6 @@ export default (params: {
     onClose?.(ev);
     computedVisible.value = false;
   };
-  // 注册事件监听器
-  watchEffect(() => {
-    const lisenters: Array<() => void> = [];
-    if (!computedVisible.value || !escToClose.value) {
-      return lisenters[0]?.();
-    }
-    lisenters[0] = onKeyStroke(['Escape'], (ev) => {
-      handleClose('esc', ev);
-    });
-  });
   watch(
     () => computedVisible.value,
     async (val) => {
@@ -88,6 +81,10 @@ export default (params: {
         outerVisible.value = true;
         await nextTick();
         innerVisible.value = true;
+        if (!escToClose.value) return;
+        lisenters[0] = onKeyStroke(['Escape'], (ev) => {
+          handleClose('esc', ev);
+        });
       } else {
         innerVisible.value = false;
       }

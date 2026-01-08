@@ -6,6 +6,8 @@
     :src="src"
     :class="$attrs.class"
     :style="$attrs.style"
+    @before-open="handleRegisterEvent"
+    @before-close="handleRegisterEvent"
   >
     <template #arrow>
       <div class="yc-image-preview-arrow">
@@ -23,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs, watchEffect } from 'vue';
+import { toRefs } from 'vue';
 import {
   ImagePreviewGroupProps,
   ImagePreviewGroupEmits,
@@ -70,6 +72,7 @@ const { src, srcList, computedCurrent, computedVisible } = useContext().provide(
   props,
   emits
 );
+const lisenters: Array<() => void> = [];
 // 处理index发生改变
 const handleCurrentChange = (type: string) => {
   let index = 0;
@@ -89,18 +92,20 @@ const handleCurrentChange = (type: string) => {
   }
   computedCurrent.value = index;
 };
-// 注册事件监听器
-watchEffect(() => {
-  const lisenters: Array<() => void> = [];
-  if (!computedVisible.value || !keyboard.value) {
-    return lisenters[0]?.();
+// 处理注册事件
+const handleRegisterEvent = () => {
+  if (keyboard.value) {
+    lisenters[0] = onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
+      const map: Record<string, string> = {
+        ArrowLeft: 'pre',
+        ArrowRight: 'next',
+      };
+      handleCurrentChange(map[e.key]);
+    });
   }
-  lisenters[0] = onKeyStroke(['ArrowLeft', 'ArrowRight'], (e) => {
-    const map: Record<string, string> = {
-      ArrowLeft: 'pre',
-      ArrowRight: 'next',
-    };
-    handleCurrentChange(map[e.key]);
-  });
-});
+};
+// 处理事件注销
+const handleClearEvent = () => {
+  lisenters.forEach((v) => v());
+};
 </script>

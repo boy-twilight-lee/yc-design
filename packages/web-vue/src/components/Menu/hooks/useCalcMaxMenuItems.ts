@@ -69,7 +69,7 @@ export default function useCalcMaxMenuItem({
     onCleanup(() => {
       lisenters.forEach((v) => v());
     });
-    if (mode.value === 'horizontal') {
+    if (mode.value != 'horizontal') {
       return lisenters.forEach((v) => v());
     }
     const { stop } = useResizeObserver(menuRef, throttle(updateMaxItems, 200));

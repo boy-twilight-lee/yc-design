@@ -50,6 +50,8 @@ export interface ImagePreviewProps {
 export interface ImagePreviewEmits {
   (e: 'update:visible', value: boolean): void;
   (e: 'close'): void;
+  (e: 'beforeOpen'): void;
+  (e: 'beforeClose'): void;
 }
 
 export interface ImagePreviewSlots {
