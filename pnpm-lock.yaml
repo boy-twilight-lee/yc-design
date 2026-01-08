@@ -27,8 +27,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
       yc-design-vue:
-        specifier: ^2.5.6
-        version: 2.5.6(vue@3.5.25(typescript@5.9.3))
+        specifier: ^2.5.7
+        version: 2.5.7(vue@3.5.25(typescript@5.9.3))
     devDependencies:
       '@arco-design/web-vue':
         specifier: ^2.57.0
@@ -2307,8 +2307,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  yc-design-vue@2.5.6:
-    resolution: {integrity: sha512-7M1uojDiNy4UyzxI/FNJbb72pSHyafuGt9Ii8NjZeNIUD87rg0wtuzZuCx0adgyxc1MKPIRaTOOq7yBgsFLW3g==}
+  yc-design-vue@2.5.7:
+    resolution: {integrity: sha512-Cgyg0o8vwhur4dbVXpEFRF/WNIaWMER68+0rPbfbn31DhrmqLYpMhPav0zgeZA9emS42SpqTv9cPL5M5/a+UGQ==}
     peerDependencies:
       vue: ^3.3.4
 
@@ -4605,7 +4605,7 @@ snapshots:
 
   yaml@2.8.1: {}
 
-  yc-design-vue@2.5.6(vue@3.5.25(typescript@5.9.3)):
+  yc-design-vue@2.5.7(vue@3.5.25(typescript@5.9.3)):
     dependencies:
       vue: 3.5.25(typescript@5.9.3)
 

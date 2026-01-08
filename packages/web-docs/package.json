@@ -1,6 +1,6 @@
 {
   "name": "yc-design-docs",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "type": "module",
   "description": "documentation for yc-design-vue.",
   "scripts": {
